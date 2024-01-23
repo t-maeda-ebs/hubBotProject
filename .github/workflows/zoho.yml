@@ -73,6 +73,7 @@ jobs:
       - uses: Integrations-dev/GitHub-Informer@v1
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
+          issue-comment-message: 'Issue Comment :speech_balloon:\n${{ github.event.comment.body }}'
           #branch-protection-rule-message: 'Security Update :Security:\n (event) (rule) is (action) by (me) at (repo) under (ref)'
           #check-run-message: 'Check Run Status :server:\n (event) (run) is (action) by (me) at (repo) under (ref)'
           #check-suite-message: 'Check Suite Status :server:\n (event) is (action) by (me) at (repo) under (ref)'
