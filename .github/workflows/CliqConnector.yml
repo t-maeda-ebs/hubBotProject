@@ -65,9 +65,8 @@ on:
     # types : [started]
   workflow_dispatch:
     # No Types
-  
 jobs:
-  connecting_cliq:
+  setup_comment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -75,17 +74,16 @@ jobs:
 
       - name: Prepare comment data
         run: |
-          COMMENT="${{ github.event.comment.body }}"
-          COMMENT="${COMMENT//'%'/'%25'}"
-          COMMENT="${COMMENT//$'\n'/'%0A'}"
-          COMMENT="${COMMENT//$'\r'/'%0D'}"
-          echo "COMMENT=$COMMENT" >> $GITHUB_ENV
+          ISSUE_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "ESCAPED_COMMENT=$ISSUE_COMMENT" >> $GITHUB_ENV
 
-      - name: Send notification to Cliq
-        uses: Integrations-dev/GitHub-Informer@v1
+      - name: Use Escaped Comment
+        run: |
+          # ここでエスケープされたコメントデータを使用
+          echo "Escaped Comment: $ESCAPED_COMMENT"
+      - uses: Integrations-dev/GitHub-Informer@v1
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
-          message: "New comment on issue: ${{ github.event.issue.html_url }}\nComment: ${{ env.COMMENT }}"
           #issue-comment-message: '(me) commented (event) (issue) '
           #branch-protection-rule-message: 'Security Update :Security:\n (event) (rule) is (action) by (me) at (repo) under (ref)'
           #check-run-message: 'Check Run Status :server:\n (event) (run) is (action) by (me) at (repo) under (ref)'
