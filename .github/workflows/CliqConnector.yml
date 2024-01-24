@@ -69,14 +69,14 @@ jobs:
   setup_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Set ESCAPED_COMMENT
+      - name: Set DISCUSSION_COMMENT
         run: |
-          ESCAPED_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "ESCAPED_COMMENT=$ESCAPED_COMMENT" >> $GITHUB_ENV    
+          DISCUSSION_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "DISCUSSION_COMMENT=$DISCUSSION_COMMENT" >> $GITHUB_ENV    
       - uses: Integrations-dev/GitHub-Informer@v1
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
-          comment: ${{ env.ESCAPED_COMMENT }}
+          comment: ${{ env.DISCUSSION_COMMENT }}
           #issue-comment-message: '(me) commented (event) (issue) '
           #branch-protection-rule-message: 'Security Update :Security:\n (event) (rule) is (action) by (me) at (repo) under (ref)'
           #check-run-message: 'Check Run Status :server:\n (event) (run) is (action) by (me) at (repo) under (ref)'
