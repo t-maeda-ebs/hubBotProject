@@ -69,11 +69,7 @@ jobs:
   setup_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Set DISCUSSION_COMMENT
-        run: |
-          DISCUSSION_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "DISCUSSION_COMMENT=$DISCUSSION_COMMENT" >> $GITHUB_ENV    
-      - uses: Integrations-dev/GitHub-Informer@v1
+      - uses: t-maeda-ebisu/gitHub-Informer
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
           comment: ${{ env.DISCUSSION_COMMENT }}
