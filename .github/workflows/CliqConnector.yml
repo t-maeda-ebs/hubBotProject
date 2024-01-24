@@ -72,7 +72,6 @@ jobs:
       - uses: t-maeda-ebisu/gitHub-Informer
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
-          comment: ${{ env.DISCUSSION_COMMENT }}
           #issue-comment-message: '(me) commented (event) (issue) '
           #branch-protection-rule-message: 'Security Update :Security:\n (event) (rule) is (action) by (me) at (repo) under (ref)'
           #check-run-message: 'Check Run Status :server:\n (event) (run) is (action) by (me) at (repo) under (ref)'
