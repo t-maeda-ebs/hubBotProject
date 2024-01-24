@@ -69,9 +69,14 @@ jobs:
   setup_comment:
     runs-on: ubuntu-latest
     steps:
-      - uses: t-maeda-ebisu/GitHub-Informer-custom
+      - name: Set DISCUSSION_COMMENT
+        run: |
+          DISCUSSION_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "DISCUSSION_COMMENT=$DISCUSSION_COMMENT" >> $GITHUB_ENV    
+      - uses: Integrations-dev/GitHub-Informer@v1
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
+          comment: ${{ env.DISCUSSION_COMMENT }}
           #issue-comment-message: '(me) commented (event) (issue) '
           #branch-protection-rule-message: 'Security Update :Security:\n (event) (rule) is (action) by (me) at (repo) under (ref)'
           #check-run-message: 'Check Run Status :server:\n (event) (run) is (action) by (me) at (repo) under (ref)'
