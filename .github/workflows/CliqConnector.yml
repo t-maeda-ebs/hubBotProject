@@ -69,18 +69,10 @@ jobs:
   setup_comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Prepare comment data
+      - name: Set ESCAPED_COMMENT
         run: |
-          ISSUE_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "ESCAPED_COMMENT=$ISSUE_COMMENT" >> $GITHUB_ENV
-
-      - name: Use Escaped Comment
-        run: |
-          # ここでエスケープされたコメントデータを使用
-          echo "Escaped Comment: $ESCAPED_COMMENT"
+          ESCAPED_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "ESCAPED_COMMENT=$ESCAPED_COMMENT" >> $GITHUB_ENV    
       - uses: Integrations-dev/GitHub-Informer@v1
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
