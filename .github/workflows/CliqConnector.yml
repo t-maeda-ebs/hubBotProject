@@ -13,7 +13,7 @@ on:
     # No Types
   deployment:
     # No Types
-  deployment_status:
+  #deployment_status:
     # No Types
   discussion:
     # types : [created , edited , deleted , transferred , pinned , unpinned , labeled , unlabeled , locked , unlocked , category_changed , answered , unanswered]
@@ -24,7 +24,7 @@ on:
   gollum:
     # No Types
   issues:
-    types : [opened , edited , deleted , transferred , pinned , unpinned , closed , reopened , assigned , unassigned , labeled , unlabeled , locked , unlocked , milestoned , demilestoned]
+    types : [opened , edited , deleted ,closed , reopened , assigned , milestoned]
   issue_comment:
     # Use this for pull_request_comment also
     types : [created , edited , deleted]
@@ -65,16 +65,19 @@ on:
     # types : [started]
   workflow_dispatch:
     # No Types
-  
 jobs:
-  connecting_cliq:
+  setup_comment:
     runs-on: ubuntu-latest
     steps:
+      - name: Set DISCUSSION_COMMENT
+        run: |
+          DISCUSSION_COMMENT=$(echo "${{ github.event.comment.body }}" | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "DISCUSSION_COMMENT=$DISCUSSION_COMMENT" >> $GITHUB_ENV    
       - uses: Integrations-dev/GitHub-Informer@v1
         with:
           channel-endpoint: ${{ secrets.CLIQ_WEBHOOK_SECTET_TEST }}
-          #issue-comment-message: '(me) が ${{ github.event.issue.number }} にコメントしました。\n > ${{ github.event.comment.body }}'
-          issue-comment-message: 'Issue Comment :speech_balloon:\nIssue Number: ${{ github.event.issue.number }}\nComment: ${{ github.event.comment.body }}'
+          comment: ${{ env.DISCUSSION_COMMENT }}
+          #issue-comment-message: '(me) commented (event) (issue) '
           #branch-protection-rule-message: 'Security Update :Security:\n (event) (rule) is (action) by (me) at (repo) under (ref)'
           #check-run-message: 'Check Run Status :server:\n (event) (run) is (action) by (me) at (repo) under (ref)'
           #check-suite-message: 'Check Suite Status :server:\n (event) is (action) by (me) at (repo) under (ref)'
@@ -86,8 +89,10 @@ jobs:
           #discussion-comment-message: 'Discussion Comment :idea:\n A (event) has been (action) at (discussion)'
           #fork-message: '(repo) has been forked by (me) under (ref)'
           #gollum-message: 'Changes have been made in the Wiki Pages of (repo) by (me)'
-          #issues-message: 'Oops :surprise:\n A (event) (issue) is (action) by (me) at (repo) under (ref)'
-          #issue-comment-message: 'Hey :awe:\n (event) has been (action) by (me) at (issue)'
+          issues-message: 'Oops :surprise:\n A (event) (issue) is (action) by (me) at (repo) under (ref)'
+          issue-comment-message: >
+            :awe:\n
+            (event) has been (action) by (me) at: "${{ github.event.issue.html_url }}"
           #label-message: 'Seems Like New Issues required New Labels :curious:\n A (event) (label) has been (action) by (me)'
           #milestone-message: 'Goals need to be Changed as the Project Progresses :milestone:\n A (event) (milestone) is (action)'
           #page-build-message: 'A (event) is made by (me) for (repo)'
